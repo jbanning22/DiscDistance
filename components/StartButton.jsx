@@ -1,10 +1,27 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import Geolocation from 'react-native-geolocation-service';
 
 const StartButton = props => {
+  const [startingLocation, setStartLocation] = useState({});
+
+  const getStartingLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        console.log(latitude, longitude);
+        setStartLocation({latitude, longitude});
+      },
+      error => {
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
   return (
     <View>
-      <TouchableOpacity style={styles.button1}>
+      <TouchableOpacity onPress={getStartingLocation} style={styles.button1}>
         <Text style={{fontSize: 24, alignSelf: 'center'}}>Start</Text>
       </TouchableOpacity>
     </View>

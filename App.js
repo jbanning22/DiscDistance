@@ -5,11 +5,18 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import StartButton from './components/StartButton';
 import EndButton from './components/EndButton';
+import Geolocation from 'react-native-geolocation-service';
 
 const App = () => {
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization('always');
+    }
+  }, []);
+
   return (
     <SafeAreaView style={styles.box1}>
       <View style={{flex: 2, justifyContent: 'flex-start'}}>
@@ -23,7 +30,7 @@ const App = () => {
         <EndButton />
       </View>
 
-      <View style={{justifyContent: 'flex-end'}}>
+      <View style={{justifyContent: 'flex-end', marginTop: 15}}>
         <Text>All distances are accurate within 20ft.</Text>
       </View>
     </SafeAreaView>

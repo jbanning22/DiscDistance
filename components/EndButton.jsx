@@ -5,7 +5,7 @@ const EndButton = props => {
   return (
     <View>
       <TouchableOpacity style={styles.button2}>
-        <Text>End</Text>
+        <Text style={{fontSize: 24, alignSelf: 'center'}}>End</Text>
       </TouchableOpacity>
     </View>
   );
@@ -15,10 +15,13 @@ export default EndButton;
 
 const styles = StyleSheet.create({
   button2: {
+    justifyContent: 'center',
+    height: 50,
+    width: 90,
     border: 1,
-    borderRadius: 2,
+    borderRadius: 20,
     bordercolor: 'black',
-    backgroundColor: 'orange',
-    paddingLeft: 15,
+    backgroundColor: '#EE611E',
+    marginLeft: 80,
   },
 });

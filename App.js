@@ -13,7 +13,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.box1}>
       <View style={{flex: 2, justifyContent: 'flex-start'}}>
-        <Text style={{fontSize: 24, color: '#1ECEEE'}}>
+        <Text style={{fontSize: 40, color: '#1ECEEE'}}>
           Measure your throw!
         </Text>
       </View>
@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignSelf: 'center',
   },
 });

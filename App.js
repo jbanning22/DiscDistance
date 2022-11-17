@@ -3,24 +3,29 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import StartButton from './components/StartButton';
 import EndButton from './components/EndButton';
 import Geolocation from 'react-native-geolocation-service';
+import MapView from 'react-native-maps';
 
 const App = () => {
   const [startingLocation, setStartLocation] = useState({});
   const [endingLocation, setEndLocation] = useState({});
   const [endingDist, setEndingDist] = useState(null);
 
+  function reset() {
+    setStartLocation({});
+    setEndLocation({});
+    setEndingDist(null);
+  }
+
   function distance(lat2, lon2) {
     const lat1 = startingLocation.latitude;
     const lon1 = startingLocation.longitude;
-    console.log('lon1', lon1);
-    console.log('lat2', lat2);
-    console.log('lon2', lon2);
     if (lat1 === endingLocation.latitude && lon1 === endingLocation.longitude) {
       setEndingDist(0);
     } else {
@@ -62,10 +67,23 @@ const App = () => {
               }>{`You threw... ${endingDist}ft`}</Text>
           )}
         </View>
+        <View>
+          <MapView
+            mapType="satellite"
+            style={{height: '95%', width: '100%'}}
+            initialRegion={{
+              latitude: 39.6837,
+              longitude: -75.7497,
+              latitudeDelta: 0.002,
+              longitudeDelta: 0.002,
+            }}
+          />
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
+        <Button title="reset" onPress={reset} />
         <EndButton calcDistance={distance} setEnd={setEndLocation} />
       </View>
       <View style={{justifyContent: 'flex-end', marginTop: 15}}>
@@ -93,5 +111,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontWeight: '500',
     color: '#1E94EE',
+  },
+  buttonStyle: {
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 20,
   },
 });

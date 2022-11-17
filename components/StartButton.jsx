@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     bordercolor: 'black',
     backgroundColor: '#31EE1E',
-    marginRight: 80,
+    marginRight: 60,
   },
 });

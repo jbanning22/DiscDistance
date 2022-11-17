@@ -3,14 +3,15 @@ import React, {useState} from 'react';
 import Geolocation from 'react-native-geolocation-service';
 
 const StartButton = props => {
-  const [startingLocation, setStartLocation] = useState({});
+  //   const [startingLocation, setStartLocation] = useState({});
+  const {setStart} = props;
 
   const getStartingLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
         console.log(latitude, longitude);
-        setStartLocation({latitude, longitude});
+        setStart({latitude, longitude});
       },
       error => {
         console.log(error.code, error.message);

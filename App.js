@@ -59,14 +59,7 @@ const App = () => {
         <Text style={{fontSize: 40, color: '#EEBA1E'}}>
           Measure your throw!
         </Text>
-        <View style={{flex: 2, justifyContent: 'center'}}>
-          {endingDist !== null && (
-            <Text
-              style={
-                styles.distanceText
-              }>{`You threw... ${endingDist}ft`}</Text>
-          )}
-        </View>
+        <View style={{flex: 2, justifyContent: 'center'}}></View>
         <View>
           <MapView
             mapType="satellite"
@@ -76,8 +69,14 @@ const App = () => {
               longitude: -75.7497,
               latitudeDelta: 0.002,
               longitudeDelta: 0.002,
-            }}
-          />
+            }}>
+            {endingDist !== null && (
+              <Text
+                style={
+                  styles.distanceText
+                }>{`You threw... ${endingDist}ft`}</Text>
+            )}
+          </MapView>
         </View>
       </View>
 

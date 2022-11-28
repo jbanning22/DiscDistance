@@ -5,6 +5,7 @@ import {
   View,
   Button,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import StartButton from './components/StartButton';
@@ -101,8 +102,12 @@ const App = () => {
                 coordinate={{
                   latitude: presentLocation.latitude,
                   longitude: presentLocation.longitude,
-                }}
-              />
+                }}>
+                <Image
+                  style={{width: 45, height: 45}}
+                  source={require('./images/bluedot.gif')}
+                />
+              </Marker>
             </MapView>
           )}
         </View>

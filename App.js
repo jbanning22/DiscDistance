@@ -104,8 +104,8 @@ const App = () => {
                   longitude: presentLocation.longitude,
                 }}>
                 <Image
-                  style={{width: 45, height: 45}}
-                  source={require('./images/bluedot.gif')}
+                  style={{width: 30, height: 30}}
+                  source={require('./images/bluedotclearb.png')}
                 />
               </Marker>
             </MapView>

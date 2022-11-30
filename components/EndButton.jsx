@@ -9,7 +9,8 @@ const EndButton = props => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        setEnd({latitude, longitude});
+        console.log('getEndingLocation ', latitude, longitude);
+        // setEnd({latitude, longitude});
         if (latitude !== undefined && longitude !== undefined) {
           calcDistance(latitude, longitude);
         }

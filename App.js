@@ -14,39 +14,54 @@ import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
 
 const App = () => {
-  const [startingLocation, setStartLocation] = useState({});
-  const [endingLocation, setEndLocation] = useState({});
+  const [startingLocation, setStartLocation] = useState(null);
+  const [endingLocation, setEndLocation] = useState(null);
   const [endingDist, setEndingDist] = useState(null);
   const [presentLocation, setPresentLocation] = useState(null);
 
   useEffect(() => {
-    getPresentLocation();
-  }, []);
+    if (presentLocation === null) {
+      getPresentLocation();
+    }
+  }, [presentLocation]);
 
   function reset() {
-    setStartLocation({});
-    setEndLocation({});
+    setStartLocation(null);
+    setEndLocation(null);
     setEndingDist(null);
   }
 
   const getPresentLocation = () => {
-    Geolocation.getCurrentPosition(
+    return Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        console.log(latitude, longitude);
+        console.log(
+          'getCurrentPosition latitude is: ',
+          latitude,
+          'longitude is: ',
+          longitude,
+        );
         setPresentLocation({latitude, longitude});
       },
       error => {
-        console.log(error.code, error.message);
+        console.log(
+          'error.code: ',
+          error.code,
+          'error.message: ',
+          error.message,
+        );
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
   function distance(lat2, lon2) {
+    setEndLocation({lat2, lon2});
+    console.log('startingLocation in distance method is', startingLocation);
+    console.log('endingLocation in distance method is', endingLocation);
     const lat1 = startingLocation.latitude;
     const lon1 = startingLocation.longitude;
-    if (lat1 === endingLocation.latitude && lon1 === endingLocation.longitude) {
+    if (lat1 === lat2 && lon1 === lon2) {
       setEndingDist(0);
     } else {
       let radlat1 = (Math.PI * lat1) / 180;
@@ -85,6 +100,7 @@ const App = () => {
             <MapView
               mapType="satellite"
               followsUserLocation={true}
+              showsUserLocation={true}
               style={{height: '95%', width: '100%'}}
               initialRegion={{
                 latitude: presentLocation.latitude,
@@ -98,16 +114,22 @@ const App = () => {
                     styles.distanceText
                   }>{`You threw... ${endingDist}ft`}</Text>
               )}
-              <Marker
-                coordinate={{
-                  latitude: presentLocation.latitude,
-                  longitude: presentLocation.longitude,
-                }}>
-                <Image
-                  style={{width: 30, height: 30}}
-                  source={require('./images/bluedotclearb.png')}
+              {startingLocation !== null && (
+                <Marker
+                  coordinate={{
+                    latitude: startingLocation.latitude,
+                    longitude: startingLocation.longitude,
+                  }}
                 />
-              </Marker>
+              )}
+              {endingLocation !== null && (
+                <Marker
+                  coordinate={{
+                    latitude: endingLocation.latitude,
+                    longitude: endingLocation.longitude,
+                  }}
+                />
+              )}
             </MapView>
           )}
         </View>
@@ -115,6 +137,7 @@ const App = () => {
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
+        <Text>{`endingDist is ${endingDist}`}</Text>
         <Button title="reset" onPress={reset} />
         <EndButton calcDistance={distance} setEnd={setEndLocation} />
       </View>

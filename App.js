@@ -108,12 +108,6 @@ const App = () => {
                 latitudeDelta: 0.002,
                 longitudeDelta: 0.002,
               }}>
-              {endingDist !== null && (
-                <Text
-                  style={
-                    styles.distanceText
-                  }>{`You threw... ${endingDist}ft`}</Text>
-              )}
               {startingLocation !== null && (
                 <Marker
                   coordinate={{
@@ -137,10 +131,15 @@ const App = () => {
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
-        <Text>{`endingDist is ${endingDist}`}</Text>
         <Button title="reset" onPress={reset} />
         <EndButton calcDistance={distance} setEnd={setEndLocation} />
       </View>
+      {endingDist !== null ? (
+        <Text
+          style={styles.distanceText}>{`You threw... ${endingDist}ft`}</Text>
+      ) : (
+        <Text style={styles.distanceText2}>Good Job</Text>
+      )}
       <View style={{justifyContent: 'flex-end', marginTop: 15}}>
         <Text>All distances are accurate within 20ft.</Text>
       </View>
@@ -171,5 +170,11 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 20,
+  },
+  distanceText2: {
+    fontSize: 24,
+    alignSelf: 'center',
+    fontWeight: '500',
+    color: 'white',
   },
 });

@@ -90,18 +90,15 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.box1}>
-      <View style={{flex: 2, justifyContent: 'flex-start'}}>
-        <Text style={{fontSize: 40, color: '#EEBA1E'}}>
-          Measure your throw!
-        </Text>
-        <View style={{flex: 2, justifyContent: 'center'}}></View>
+      <View style={styles.titleView}>
+        <Text style={styles.titleStyle}>Measure your throw!</Text>
         <View>
           {presentLocation !== null && (
             <MapView
               mapType="satellite"
               followsUserLocation={true}
               showsUserLocation={true}
-              style={{height: '95%', width: '100%'}}
+              style={styles.mapSizing}
               initialRegion={{
                 latitude: presentLocation.latitude,
                 longitude: presentLocation.longitude,
@@ -132,16 +129,21 @@ const App = () => {
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
         <Button title="reset" onPress={reset} />
-        <EndButton calcDistance={distance} setEnd={setEndLocation} />
+        <EndButton
+          calcDistance={distance}
+          setEnd={setEndLocation}
+          startingLocation={startingLocation}
+        />
       </View>
       {endingDist !== null ? (
-        <Text
-          style={styles.distanceText}>{`You threw... ${endingDist}ft`}</Text>
+        <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
       ) : (
         <Text style={styles.distanceText2}>Good Job</Text>
       )}
-      <View style={{justifyContent: 'flex-end', marginTop: 15}}>
-        <Text>All distances are accurate within 20ft.</Text>
+      <View style={styles.lastView}>
+        <Text style={styles.textStyle1}>
+          All distances are accurate within 20ft.
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -155,6 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#9ED4C8',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: '#1E94EE',
+    color: '#090909',
   },
   buttonStyle: {
     borderColor: 'black',
@@ -175,6 +178,31 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: 'white',
+    color: '#9ED4C8',
+  },
+  textStyle1: {
+    fontSize: 10,
+  },
+  lastView: {
+    justifyContent: 'flex-end',
+    marginTop: 15,
+  },
+  mapSizing: {
+    height: '95%',
+    width: '100%',
+  },
+  mapStyle: {
+    flex: 2,
+    justifyContent: 'center',
+  },
+  titleStyle: {
+    fontSize: 34,
+    color: '#3F64D7',
+    fontFamily: 'Skia',
+    alignSelf: 'center',
+  },
+  titleView: {
+    flex: 2,
+    justifyContent: 'flex-start',
   },
 });

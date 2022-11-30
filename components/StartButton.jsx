@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import Geolocation from 'react-native-geolocation-service';
 
 const StartButton = props => {
-  //   const [startingLocation, setStartLocation] = useState({});
   const {setStart} = props;
 
   const getStartingLocation = () => {
@@ -23,7 +22,7 @@ const StartButton = props => {
   return (
     <View>
       <TouchableOpacity onPress={getStartingLocation} style={styles.button1}>
-        <Text style={{fontSize: 24, alignSelf: 'center'}}>Start</Text>
+        <Text style={styles.buttonText}>Start</Text>
       </TouchableOpacity>
     </View>
   );
@@ -41,5 +40,9 @@ const styles = StyleSheet.create({
     bordercolor: 'black',
     backgroundColor: '#31EE1E',
     marginRight: 60,
+  },
+  buttonText: {
+    fontSize: 24,
+    alignSelf: 'center',
   },
 });

@@ -1,15 +1,15 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import React, {useState} from 'react';
 import Geolocation from 'react-native-geolocation-service';
 
 const EndButton = props => {
-  const {setEnd, calcDistance} = props;
+  const {setEnd, calcDistance, startingLocation} = props;
 
   const getEndingLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        setEnd({latitude, longitude});
+        console.log('getEndingLocation ', latitude, longitude);
         if (latitude !== undefined && longitude !== undefined) {
           calcDistance(latitude, longitude);
         }
@@ -23,8 +23,10 @@ const EndButton = props => {
 
   return (
     <View>
-      <TouchableOpacity onPress={getEndingLocation} style={styles.button2}>
-        <Text style={{fontSize: 24, alignSelf: 'center'}}>End</Text>
+      <TouchableOpacity
+        onPress={startingLocation !== null ? getEndingLocation : null}
+        style={styles.button2}>
+        <Text style={styles.buttonText2}>End</Text>
       </TouchableOpacity>
     </View>
   );
@@ -35,12 +37,15 @@ export default EndButton;
 const styles = StyleSheet.create({
   button2: {
     justifyContent: 'center',
-    height: 50,
-    width: 90,
-    border: 1,
-    borderRadius: 20,
-    bordercolor: 'black',
-    backgroundColor: '#EE611E',
-    marginLeft: 60,
+    height: 40,
+    width: 80,
+    borderRadius: 10,
+    backgroundColor: '#E1A944',
+    marginLeft: 40,
+  },
+  buttonText2: {
+    fontSize: 24,
+    alignSelf: 'center',
+    color: 'white',
   },
 });

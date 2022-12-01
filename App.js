@@ -5,14 +5,17 @@ import {
   View,
   Button,
   TouchableOpacity,
-  Image,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import StartButton from './components/StartButton';
 import EndButton from './components/EndButton';
+import ResetButton from './components/ResetButton';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const App = () => {
   const [startingLocation, setStartLocation] = useState(null);
   const [endingLocation, setEndLocation] = useState(null);
@@ -20,16 +23,11 @@ const App = () => {
   const [presentLocation, setPresentLocation] = useState(null);
 
   useEffect(() => {
+    console.log('height is: ', windowHeight, 'width is: ', windowWidth);
     if (presentLocation === null) {
       getPresentLocation();
     }
   }, [presentLocation]);
-
-  function reset() {
-    setStartLocation(null);
-    setEndLocation(null);
-    setEndingDist(null);
-  }
 
   const getPresentLocation = () => {
     return Geolocation.getCurrentPosition(
@@ -88,17 +86,22 @@ const App = () => {
     }
   }, []);
 
+  function reset() {
+    setStartLocation(null);
+    setEndLocation(null);
+    setEndingDist(null);
+  }
+
   return (
     <SafeAreaView style={styles.box1}>
       <View style={styles.titleView}>
-        <Text style={styles.titleStyle}>Measure your throw!</Text>
+        <Text style={styles.titleStyle}>Disc Distance</Text>
         <View>
           {presentLocation !== null && (
             <MapView
               mapType="satellite"
-              followsUserLocation={true}
               showsUserLocation={true}
-              style={styles.mapSizing}
+              style={{height: windowHeight, width: windowWidth}}
               initialRegion={{
                 latitude: presentLocation.latitude,
                 longitude: presentLocation.longitude,
@@ -128,7 +131,7 @@ const App = () => {
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
-        <Button title="reset" onPress={reset} />
+        <ResetButton resetValues={reset} />
         <EndButton
           calcDistance={distance}
           setEnd={setEndLocation}
@@ -136,9 +139,13 @@ const App = () => {
         />
       </View>
       {endingDist !== null ? (
-        <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
+        <View style={styles.viewStyle}>
+          <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
+        </View>
       ) : (
-        <Text style={styles.distanceText2}>Good Job</Text>
+        <View style={styles.viewStyle}>
+          <Text style={styles.distanceText2}>Measure Your Throw!</Text>
+        </View>
       )}
       <View style={styles.lastView}>
         <Text style={styles.textStyle1}>
@@ -157,17 +164,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9ED4C8',
+    backgroundColor: 'white',
   },
   buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignSelf: 'center',
+    alignItems: 'center',
   },
   distanceText: {
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: '#090909',
+    color: 'white',
+    marginTop: 12,
   },
   buttonStyle: {
     borderColor: 'black',
@@ -178,14 +188,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: '#9ED4C8',
+    color: 'white',
+    marginTop: 12,
   },
   textStyle1: {
     fontSize: 10,
+    color: 'white',
   },
   lastView: {
     justifyContent: 'flex-end',
     marginTop: 15,
+  },
+  viewStyle: {
+    height: 40,
   },
   mapSizing: {
     height: '95%',
@@ -196,9 +211,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   titleStyle: {
-    fontSize: 34,
-    color: '#3F64D7',
-    fontFamily: 'Skia',
+    fontSize: 30,
+    color: 'black',
+    fontFamily: 'Helvetica',
     alignSelf: 'center',
   },
   titleView: {

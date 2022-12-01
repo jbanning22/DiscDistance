@@ -33,16 +33,15 @@ export default StartButton;
 const styles = StyleSheet.create({
   button1: {
     justifyContent: 'center',
-    height: 50,
-    width: 90,
-    border: 5,
-    borderRadius: 20,
-    bordercolor: 'black',
-    backgroundColor: '#31EE1E',
-    marginRight: 60,
+    height: 40,
+    width: 80,
+    borderRadius: 10,
+    backgroundColor: '#55D53E',
+    marginRight: 40,
   },
   buttonText: {
     fontSize: 24,
     alignSelf: 'center',
+    color: 'white',
   },
 });

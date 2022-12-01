@@ -37,16 +37,15 @@ export default EndButton;
 const styles = StyleSheet.create({
   button2: {
     justifyContent: 'center',
-    height: 50,
-    width: 90,
-    border: 1,
-    borderRadius: 20,
-    bordercolor: 'black',
-    backgroundColor: '#EE611E',
-    marginLeft: 60,
+    height: 40,
+    width: 80,
+    borderRadius: 10,
+    backgroundColor: '#E1A944',
+    marginLeft: 40,
   },
   buttonText2: {
     fontSize: 24,
     alignSelf: 'center',
+    color: 'white',
   },
 });

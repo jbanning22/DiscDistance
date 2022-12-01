@@ -94,40 +94,44 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.box1}>
-      <View style={styles.titleView}>
+      <View>
         <Text style={styles.titleStyle}>Disc Distance</Text>
-        <View>
-          {presentLocation !== null && (
-            <MapView
-              mapType="satellite"
-              showsUserLocation={true}
-              style={{height: windowHeight, width: windowWidth}}
-              initialRegion={{
-                latitude: presentLocation.latitude,
-                longitude: presentLocation.longitude,
-                latitudeDelta: 0.002,
-                longitudeDelta: 0.002,
-              }}>
-              {startingLocation !== null && (
-                <Marker
-                  coordinate={{
-                    latitude: startingLocation.latitude,
-                    longitude: startingLocation.longitude,
-                  }}
-                />
-              )}
-              {endingLocation !== null && (
-                <Marker
-                  coordinate={{
-                    latitude: endingLocation.latitude,
-                    longitude: endingLocation.longitude,
-                  }}
-                />
-              )}
-            </MapView>
-          )}
-        </View>
+        {endingDist !== null ? (
+          <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
+        ) : (
+          <Text style={styles.distanceText2}>Measure Your Throw!</Text>
+        )}
       </View>
+
+      {presentLocation !== null && (
+        <MapView
+          mapType="satellite"
+          showsUserLocation={true}
+          style={styles.mapSizing}
+          initialRegion={{
+            latitude: presentLocation.latitude,
+            longitude: presentLocation.longitude,
+            latitudeDelta: 0.002,
+            longitudeDelta: 0.002,
+          }}>
+          {startingLocation !== null && (
+            <Marker
+              coordinate={{
+                latitude: startingLocation.latitude,
+                longitude: startingLocation.longitude,
+              }}
+            />
+          )}
+          {endingLocation !== null && (
+            <Marker
+              coordinate={{
+                latitude: endingLocation.latitude,
+                longitude: endingLocation.longitude,
+              }}
+            />
+          )}
+        </MapView>
+      )}
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
@@ -138,15 +142,7 @@ const App = () => {
           startingLocation={startingLocation}
         />
       </View>
-      {endingDist !== null ? (
-        <View style={styles.viewStyle}>
-          <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
-        </View>
-      ) : (
-        <View style={styles.viewStyle}>
-          <Text style={styles.distanceText2}>Measure Your Throw!</Text>
-        </View>
-      )}
+
       <View style={styles.lastView}>
         <Text style={styles.textStyle1}>
           All distances are accurate within 20ft.
@@ -169,14 +165,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignSelf: 'center',
+    //alignSelf: 'center',
     alignItems: 'center',
   },
   distanceText: {
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: 'white',
+    color: 'blue',
     marginTop: 12,
   },
   buttonStyle: {
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: 'white',
+    color: 'blue',
     marginTop: 12,
   },
   textStyle1: {
@@ -199,12 +195,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginTop: 15,
   },
-  viewStyle: {
-    height: 40,
-  },
   mapSizing: {
-    height: '95%',
-    width: '100%',
+    margin: 15,
+    height: '80%',
+    width: '95%',
   },
   mapStyle: {
     flex: 2,

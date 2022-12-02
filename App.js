@@ -5,48 +5,61 @@ import {
   View,
   Button,
   TouchableOpacity,
-  Image,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import StartButton from './components/StartButton';
 import EndButton from './components/EndButton';
+import ResetButton from './components/ResetButton';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker} from 'react-native-maps';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const App = () => {
-  const [startingLocation, setStartLocation] = useState({});
-  const [endingLocation, setEndLocation] = useState({});
+  const [startingLocation, setStartLocation] = useState(null);
+  const [endingLocation, setEndLocation] = useState(null);
   const [endingDist, setEndingDist] = useState(null);
   const [presentLocation, setPresentLocation] = useState(null);
 
   useEffect(() => {
-    getPresentLocation();
-  }, []);
-
-  function reset() {
-    setStartLocation({});
-    setEndLocation({});
-    setEndingDist(null);
-  }
+    console.log('height is: ', windowHeight, 'width is: ', windowWidth);
+    if (presentLocation === null) {
+      getPresentLocation();
+    }
+  }, [presentLocation]);
 
   const getPresentLocation = () => {
-    Geolocation.getCurrentPosition(
+    return Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        console.log(latitude, longitude);
+        console.log(
+          'getCurrentPosition latitude is: ',
+          latitude,
+          'longitude is: ',
+          longitude,
+        );
         setPresentLocation({latitude, longitude});
       },
       error => {
-        console.log(error.code, error.message);
+        console.log(
+          'error.code: ',
+          error.code,
+          'error.message: ',
+          error.message,
+        );
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
   function distance(lat2, lon2) {
+    setEndLocation({lat2, lon2});
+    console.log('startingLocation in distance method is', startingLocation);
+    console.log('endingLocation in distance method is', endingLocation);
     const lat1 = startingLocation.latitude;
     const lon1 = startingLocation.longitude;
-    if (lat1 === endingLocation.latitude && lon1 === endingLocation.longitude) {
+    if (lat1 === lat2 && lon1 === lon2) {
       setEndingDist(0);
     } else {
       let radlat1 = (Math.PI * lat1) / 180;
@@ -73,53 +86,67 @@ const App = () => {
     }
   }, []);
 
+  function reset() {
+    setStartLocation(null);
+    setEndLocation(null);
+    setEndingDist(null);
+  }
+
   return (
     <SafeAreaView style={styles.box1}>
-      <View style={{flex: 2, justifyContent: 'flex-start'}}>
-        <Text style={{fontSize: 40, color: '#EEBA1E'}}>
-          Measure your throw!
-        </Text>
-        <View style={{flex: 2, justifyContent: 'center'}}></View>
-        <View>
-          {presentLocation !== null && (
-            <MapView
-              mapType="satellite"
-              followsUserLocation={true}
-              style={{height: '95%', width: '100%'}}
-              initialRegion={{
-                latitude: presentLocation.latitude,
-                longitude: presentLocation.longitude,
-                latitudeDelta: 0.002,
-                longitudeDelta: 0.002,
-              }}>
-              {endingDist !== null && (
-                <Text
-                  style={
-                    styles.distanceText
-                  }>{`You threw... ${endingDist}ft`}</Text>
-              )}
-              <Marker
-                coordinate={{
-                  latitude: presentLocation.latitude,
-                  longitude: presentLocation.longitude,
-                }}>
-                <Image
-                  style={{width: 30, height: 30}}
-                  source={require('./images/bluedotclearb.png')}
-                />
-              </Marker>
-            </MapView>
-          )}
-        </View>
+      <View>
+        <Text style={styles.titleStyle}>Disc Distance</Text>
+        {endingDist !== null ? (
+          <Text style={styles.distanceText}>{`${endingDist}ft`}</Text>
+        ) : (
+          <Text style={styles.distanceText2}>Measure Your Throw!</Text>
+        )}
       </View>
+
+      {presentLocation !== null && (
+        <MapView
+          mapType="satellite"
+          showsUserLocation={true}
+          style={styles.mapSizing}
+          initialRegion={{
+            latitude: presentLocation.latitude,
+            longitude: presentLocation.longitude,
+            latitudeDelta: 0.002,
+            longitudeDelta: 0.002,
+          }}>
+          {startingLocation !== null && (
+            <Marker
+              coordinate={{
+                latitude: startingLocation.latitude,
+                longitude: startingLocation.longitude,
+              }}
+            />
+          )}
+          {endingLocation !== null && (
+            <Marker
+              coordinate={{
+                latitude: endingLocation.latitude,
+                longitude: endingLocation.longitude,
+              }}
+            />
+          )}
+        </MapView>
+      )}
 
       <View style={styles.buttonContainer}>
         <StartButton setStart={setStartLocation} />
-        <Button title="reset" onPress={reset} />
-        <EndButton calcDistance={distance} setEnd={setEndLocation} />
+        <ResetButton resetValues={reset} />
+        <EndButton
+          calcDistance={distance}
+          setEnd={setEndLocation}
+          startingLocation={startingLocation}
+        />
       </View>
-      <View style={{justifyContent: 'flex-end', marginTop: 15}}>
-        <Text>All distances are accurate within 20ft.</Text>
+
+      <View style={styles.lastView}>
+        <Text style={styles.textStyle1}>
+          All distances are accurate within 20ft.
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -133,20 +160,58 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   buttonContainer: {
     flexDirection: 'row',
-    alignSelf: 'center',
+    justifyContent: 'center',
+    //alignSelf: 'center',
+    alignItems: 'center',
   },
   distanceText: {
     fontSize: 24,
     alignSelf: 'center',
     fontWeight: '500',
-    color: '#1E94EE',
+    color: 'blue',
+    marginTop: 12,
   },
   buttonStyle: {
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 20,
+  },
+  distanceText2: {
+    fontSize: 24,
+    alignSelf: 'center',
+    fontWeight: '500',
+    color: 'blue',
+    marginTop: 12,
+  },
+  textStyle1: {
+    fontSize: 10,
+    color: 'white',
+  },
+  lastView: {
+    justifyContent: 'flex-end',
+    marginTop: 15,
+  },
+  mapSizing: {
+    margin: 15,
+    height: '80%',
+    width: '95%',
+  },
+  mapStyle: {
+    flex: 2,
+    justifyContent: 'center',
+  },
+  titleStyle: {
+    fontSize: 30,
+    color: 'black',
+    fontFamily: 'Helvetica',
+    alignSelf: 'center',
+  },
+  titleView: {
+    flex: 2,
+    justifyContent: 'flex-start',
   },
 });
